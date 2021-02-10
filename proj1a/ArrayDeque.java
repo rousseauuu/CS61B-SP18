@@ -13,8 +13,49 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    public void addFirst(T item) {
+    // Private methods
+    private int plusOne(int index) {
+        return (index + 1) % items.length;
+    }
 
+    private int minusOne(int index) {
+        return (index - 1 + items.length) %items.length;
+    }
+
+    private void resize(int capacity) {
+        T[] newItems = (T[]) new Object[capacity];
+        int oldIndex = plusOne(nextFirst);
+        for (int newItem = 0; newItem <= size; newItem++) {
+            newItems[newItem] = items[oldIndex];
+            oldIndex = plusOne(oldIndex);
+        }
+        items = newItems;
+        nextFirst = capacity - 1;
+        nextLast = size;
+    }
+
+    private void upSize() {
+        this.resize(size * 2);
+    }
+
+    private void downSize() {
+        this.resize(items.length / 2);
+    }
+
+
+
+    private boolean isFull() {
+        return items.length == size;
+    }
+
+    // Public methods
+    public void addFirst(T item) {
+        if (isFull()) {
+            upSize();
+        }
+        items[nextFirst] = item;
+        nextFirst = minusOne(nextFirst);
+        size++;
     }
 
     public void addLast(T item) {
