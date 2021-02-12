@@ -59,35 +59,61 @@ public class ArrayDeque<T> {
     }
 
     public void addLast(T item) {
-
+        if (isFull()) {
+            upSize();
+        }
+        items[nextLast] = item;
+        nextLast = plusOne(nextLast);
+        size++;
     }
 
     public boolean isEmpty() {
+        return size == 0;
     }
 
 
     public int size() {
-
+        return size;
     }
 
     public void printDeque() {
-
+        for (int i = plusOne(nextFirst); i != nextLast; i = plusOne(i)) {
+            System.out.print(items[i] + " ");
+        }
+        System.out.println();
     }
 
     public T removeFirst() {
+        if (items.length >= 16 && items.length >= 4 * size) {
+            downSize();
+        }
 
+        if (isEmpty()) return null;
+        int currentFirst = plusOne(nextFirst);
+        T item = items[currentFirst];
+        items[currentFirst] = null;
+        size--;
+        return item;
     }
 
     public T removeLast() {
+        if (items.length >= 16 && items.length >= 4 * size) {
+            downSize();
+        }
 
+        if (isEmpty()) return null;
+
+        int currentLast = minusOne(nextLast);
+        T item = items[currentLast];
+        items[currentLast] = null;
+        size--;
+        return item;
     }
 
     public T get(int index) {
-
-    }
-
-    public ArrayDeque(ArrayDeque other) {
-
+        if (isEmpty()) return null;
+        int start = plusOne(nextFirst);
+        return items[(start + index) % items.length];
     }
 
 }
